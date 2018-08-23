@@ -1,0 +1,269 @@
+<% layout('layout') -%>
+
+<style>
+    #search input,
+    #search select {
+        width: 150px;
+    }
+
+    #search label {
+        width: 80px;
+        text-align: right;
+    }
+
+    #search .form-group {
+        margin: 5px auto;
+    }
+</style>
+
+<div class="panel-group" id="search" role="tablist" aria-multiselectable="true">
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="title">
+            <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#search" href="#collapseSearch" aria-expanded="true" aria-controls="collapseSearch">
+                    查询条件
+                </a>
+
+                <a class="btn btn-primary btn-sm pull-right" href="/students/add" role="button" style="margin-top:-8px;">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    添加
+                </a>
+            </h4>
+        </div>
+        <div id="collapseSearch" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="title">
+            <div class="panel-body">
+                <form class="form-inline" action="/students/list">
+                    <div class="form-group">
+                        <label for="sno">学号：</label>
+                        <input type="text" class="form-control" id="sno" name="sno">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">姓名：</label>
+                        <input type="text" class="form-control" id="name" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="sex">性别：</label>
+                        <select class="form-control" id="sex" name="sex">
+                            <option value="-1">全部</option>
+                            <option value="男">男</option>
+                            <option value="女">女</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="majorId">专业：</label>
+                        <select class="form-control" id="majorId" name="majorId">
+                            <option value="-1">全部</option>
+                            <% for(var i = 0; i < majors.length; i++) { %>
+                                <option value="<%=majors[i].id%>"><%=majors[i].name%></option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="classId">班级：</label>
+                        <select class="form-control" id="classId" name="classId">
+                            <option value="-1">全部</option>
+                            <% for(var i = 0; i < classes.length; i++) { %>
+                                <option value="<%=classes[i].id%>"><%=classes[i].name%></option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="departId">院系：</label>
+                        <select class="form-control" id="departId" name="departId">
+                            <option value="-1">全部</option>
+                            <% for(var i = 0; i < departs.length; i++) { %>
+                                <option value="<%=departs[i].id%>"><%=departs[i].name%></option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">状态：</label>
+                        <select class="form-control" id="status" name="status">
+                            <option value="-1">全部</option>
+                            <option value="0">正常</option>
+                            <option value="1">删除</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthdayBegin">生日(起)：</label>
+                        <input type="date" class="form-control" id="birthdayBegin" name="birthdayBegin">
+                        <label for="birthdayEnd">生日(至)：</label>
+                        <input type="date" class="form-control" id="birthdayEnd" name="birthdayEnd">
+                    </div>
+                    <div class="form-group">
+                        <label for="card">身份证号：</label>
+                        <input type="text" class="form-control" id="card" name="card">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        搜索
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%
+    function formatDate(date, flag){
+        var date = new Date(date);
+        var y = date.getFullYear();
+        var M = date.getMonth() + 1;
+        var d = date.getDate();
+        var h = date.getHours();
+        var m = date.getMinutes();
+        var s = date.getSeconds();
+    
+        M = M < 10 ? '0' + M : M.toString();
+        d = d < 10 ? '0' + d : d.toString();
+        h = h < 10 ? '0' + h : h.toString();
+        m = m < 10 ? '0' + m : m.toString();
+        s = s < 10 ? '0' + s : s.toString();
+    
+        return flag ? `${y}-${M}-${d} ${h}:${m}:${s}` : `${y}-${M}-${d}`
+    }
+%>
+
+<div class="table-responsive">
+    <table class="table table-hover table-bordered">
+        <tr>
+            <th style="text-align: center;">
+                <input type="checkbox" class="selectAll" title="全选">
+            </th>
+            <th>主键</th>
+            <th>学号</th>
+            <th>姓名</th>
+            <th>性别</th>
+            <th>生日</th>
+            <th>身份证号</th>
+            <th>院系</th>
+            <th>专业</th>
+            <th>班级</th>
+            <!-- <th>籍贯</th>
+            <th>家庭地址</th>
+            <th>QQ</th>
+            <th>手机</th>
+            <th>邮箱</th> -->
+            <th>状态</th>
+            <!-- <th>创建时间</th>
+            <th>创建人</th>
+            <th>修改时间</th>
+            <th>修改人</th> -->
+            <th style="text-align: center;">操作</th>
+        </tr>
+        <% for(var i = 0; i < students.length; i++) { %>
+        <tr>
+            <td style="text-align: center;">
+                <input type="checkbox" class="selectSingle" title="选中" data-id="<%=students[i].id%>">
+            </td>
+            <td><%= students[i].id %></td>
+            <td><%= students[i].sno %></td>
+            <td><%= students[i].name %></td>
+            <td><%= students[i].sex %></td>
+            <td><%= formatDate(students[i].birthday, false) %></td>
+            <td><%= students[i].card %></td>
+            <td><%= students[i].departName %></td>
+            <td><%= students[i].majorName %></td>
+            <td><%= students[i].className %></td>
+            <!-- <td><%= students[i].nativePlace %></td>
+            <td><%= students[i].address %></td>
+            <td><%= students[i].qq %></td>
+            <td><%= students[i].phone %></td>
+            <td><%= students[i].email %></td> -->
+            <td>
+                <% if (students[i].status == 0) { %>
+                    正常
+                <% } else { %>    
+                    <span style="color: red;">删除</span>
+                <% } %>
+            </td>
+            <!-- <td><%= formatDate(students[i].createTime, true) %></td>
+            <td><%= students[i].createUserName %></td>
+            <td><%= formatDate(students[i].updateTime, true) %></td>
+            <td><%= students[i].updateUserName %></td> -->
+            <td style="width: 140px; text-align: center;">
+                <a class="btn btn-success btn-xs" href="/students/edit/<%=students[i].id%>" role="button">
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                    编辑
+                </a>
+                <a class="btn btn-danger btn-xs remove" href="javascript:void(0);" role="button" data-id="<%=students[i].id%>">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    删除
+                </a>
+            </td>
+        </tr>
+        <% } %>
+    </table>
+</div>
+
+<div class="row" style="margin:0">
+    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="padding-left: 0">
+        <button class="btn btn-danger" id="btnRemove">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            批量删除
+        </button>
+    </div>
+    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" style="text-align: right;">
+        <nav aria-label="Page navigation">
+            <ul class="pagination" style="margin: 0;">
+                <!-- 0 -->
+                <li class="<%= pageInfo.page == 1 ? 'disabled' : '' %>">
+                    <% if(pageInfo.page == 1) { %>
+                        <a href="javascript:void(0);" aria-label="First">
+                            <span aria-hidden="true">&lsaquo;</span>
+                        </a>
+                    <% } else { %>
+                        <a href="/students/list?page=1" aria-label="First">
+                            <span aria-hidden="true">&lsaquo;</span>
+                        </a>
+                    <% } %>
+                </li>
+                <!-- 1 -->
+                <li class="<%= pageInfo.page == 1 ? 'disabled' : '' %>">
+                    <% if(pageInfo.page == 1) { %>
+                        <a href="javascript:void(0);" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    <% } else { %>
+                        <a href="/students/list?page=<%= pageInfo.page - 1 %>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    <% } %>
+                </li>
+
+                <% for (var i = 0; i < pageInfo.pages.length; i++) { %>
+<!-- 2                         -->
+                <li class="<%= pageInfo.page == pageInfo.pages[i] ? 'active' : '' %>"><a href="/students/list?page=<%=pageInfo.pages[i]%>"><%=pageInfo.pages[i]%></a>
+                </li>
+                <% } %>
+<!-- 3 -->
+                <li class="<%= pageInfo.page == pageInfo.totalPage ? 'disabled' : '' %>">
+                    <% if (pageInfo.page == pageInfo.totalPage) { %>
+                        <a href="javascript:void(0);" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    <% } else { %>
+                        <a href="/students/list?page=<%=pageInfo.page + 1%>" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    <% } %>
+                </li>
+<!-- 4 -->
+                <li class="<%= pageInfo.page == pageInfo.totalPage ? 'disabled' : '' %>">
+                    <% if (pageInfo.page == pageInfo.totalPage) { %>
+                        <a href="javascript:void(0);" aria-label="Last">
+                            <span aria-hidden="true">&rsaquo;</span>
+                        </a>
+                    <% } else { %>
+                        <a href="/students/list?page=<%=pageInfo.totalPage%>" aria-label="Last">
+                            <span aria-hidden="true">&rsaquo;</span>
+                        </a>
+                    <% } %>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<% block('footer').append('<script src="/javascripts/stu-list.js"></script>') -%>

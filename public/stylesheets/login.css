@@ -1,0 +1,13 @@
+.pt50 {
+    padding-top: 50px;
+}
+
+.w500 {
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form-control {
+    width: 200px;
+}
