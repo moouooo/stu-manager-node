@@ -233,10 +233,10 @@
                 </li>
 
                 <% for (var i = 0; i < pageInfo.pages.length; i++) { %>
-<!-- 2                         -->
-                <li class="<%= pageInfo.page == pageInfo.pages[i] ? 'active' : '' %>"><a href="/students/list?page=<%=pageInfo.pages[i]%>"><%=pageInfo.pages[i]%></a>
-                </li>
-                <% } %>
+<li class="<%= pageInfo.page == pageInfo.pages[i] ? 'active' : '' %>"><a href="/students/list?page=<%=pageInfo.pages[i]%>"><%=pageInfo.pages[i]%></a>
+<% console.log(i); %>
+</li>
+<% } %>
 <!-- 3 -->
                 <li class="<%= pageInfo.page == pageInfo.totalPage ? 'disabled' : '' %>">
                     <% if (pageInfo.page == pageInfo.totalPage) { %>

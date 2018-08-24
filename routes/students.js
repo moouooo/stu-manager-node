@@ -153,24 +153,26 @@ router.get('/list', checkLogin, function (req, res, next) {
         sql += ` AND s.card like '%${card}%'`;
     }
     
-    // 分页 page-1)*pagesize,page*pagesize  (0,10 10,20)
-    var page = req.query.page || 1;//穿的值
-    page = page - 0;//字符串转换成数字
+    var page = req.query.page || 1;
+    page = page - 0;
     var pageSize = 10;
-
-    sql += ` LIMIT ${(page - 1) * pageSize}, ${pageSize}`;//注意limit前有空格
-
+    /* (page - 1) * pageSize, pageSize
+    0, 10
+    10,10
+    20,10 */
+    sql += ` LIMIT ${(page - 1) * pageSize}, ${pageSize}`;
 
     pool.query(sql, function (err, result) {
         if (err) {
             res.json({ code: 201, message: "数据库操作异常！" });
             return;
         }
-        // 取当前表中的数据的总记录
+
+        // 取当前表中的数据的总记录数
         var totalCount = result[3][0].totalCount;
         var totalPage = Math.ceil(totalCount / pageSize);
-        // console.log(pager(1,totalPage));
-        var pages = pager(pager, totalPage);
+        var pages = pager(page, totalPage);
+        // console.log(pages);
         // 根据上面的SQL语句,选数组序号
         res.render('students/list', {
             title: "学生列表",

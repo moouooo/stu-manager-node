@@ -1,0 +1,166 @@
+<% layout('layout') -%>
+
+<%
+    function formatDate(date, flag){
+        var date = new Date(date);
+        var y = date.getFullYear();
+        var M = date.getMonth() + 1;
+        var d = date.getDate();
+        var h = date.getHours();
+        var m = date.getMinutes();
+        var s = date.getSeconds();
+    
+        M = M < 10 ? '0' + M : M.toString();
+        d = d < 10 ? '0' + d : d.toString();
+        h = h < 10 ? '0' + h : h.toString();
+        m = m < 10 ? '0' + m : m.toString();
+        s = s < 10 ? '0' + s : s.toString();
+    
+        return flag ? `${y}-${M}-${d} ${h}:${m}:${s}` : `${y}-${M}-${d}`
+    }
+%>
+
+<style>
+    #edit .row{
+        margin: auto 0 !important;
+    }
+</style>
+
+<form style="padding-top: 10px;" id="edit">
+    <div class="row">
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="form-group">
+                <label for="tno">学号：</label>
+                <input type="hidden" value="<%= teachers.id %>" id="id">
+                <input type="text" class="form-control" id="tno" placeholder="请输入学号" value="<%= teachers.tno %>">
+            </div>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="form-group">
+                <label for="name">姓名：</label>
+                <input type="text" class="form-control" id="name" placeholder="请输入姓名" value="<%= teachers.name %>">
+            </div>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="form-group">
+                <label for="sex">性别：</label>
+                <select class="form-control" id="sex">
+                    <option value="男" <%= teachers.sex == "男" ? "selected": "" %>>男</option>
+                    <option value="女" <%= teachers.sex == "女" ? "selected": "" %>>女</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="form-group">
+                <label for="birthday">生日：</label>
+                <input type="date" class="form-control" id="birthday" placeholder="请输入生日" value="<%= formatDate(teachers.birthday, false) %>">
+            </div>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="form-group">
+                <label for="card">身份证号：</label>
+                <input type="text" class="form-control" id="card" placeholder="请输入身份证号" value="<%= teachers.card %>">
+            </div>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="form-group">
+                <label for="majorId">所学专业：</label>
+                <select class="form-control" id="majorId">
+                    <option value="-1" selected>请选择...</option>
+                    <% for(var i = 0; i < majors.length; i++) { %>
+
+                        <% if(teachers.majorId == majors[i].id) {%>
+                            <option value="<%= majors[i].id %>" selected>
+                                <%= majors[i].name %>
+                            </option>
+                        <% } else { %>
+                            <option value="<%= majors[i].id %>">
+                                <%= majors[i].name %>
+                            </option>
+                        <% } %>
+                        
+                    <% } %>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="form-group">
+                <label for="classId">所属班级：</label>
+                <select class="form-control" id="classId">
+                    <option value="-1" selected>请选择...</option>
+                    <% for(var i = 0; i < classes.length; i++) { %>
+                        <option value="<%= classes[i].id %>" <%= teachers.classId == classes[i].id ? "selected": "" %>>
+                            <%= classes[i].name %>
+                        </option>
+                    <% } %>
+                </select>
+            </div>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="form-group">
+                <label for="departId">所属院系：</label>
+                <select class="form-control" id="departId">
+                    <option value="-1" selected>请选择...</option>
+                    <% for(var i = 0; i < departs.length; i++) { %>
+                        <option value="<%= departs[i].id %>" <%= teachers.departId == departs[i].id ? "selected": "" %>>
+                            <%= departs[i].name %>
+                        </option>
+                    <% } %>
+                </select>
+            </div>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="form-group">
+                <label for="nativePlace">籍贯：</label>
+                <input type="text" class="form-control" id="nativePlace" placeholder="请输入籍贯" value="<%= teachers.nativePlace %>">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="form-group">
+                <label for="address">家庭地址：</label>
+                <input type="text" class="form-control" id="address" placeholder="请输入家庭地址" value="<%= teachers.address %>">
+            </div>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="form-group">
+                <label for="qq">QQ：</label>
+                <input type="text" class="form-control" id="qq" placeholder="请输入QQ" value="<%= teachers.qq %>">
+            </div>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="form-group">
+                <label for="phone">手机：</label>
+                <input type="text" class="form-control" id="phone" placeholder="请输入手机" value="<%= teachers.phone %>">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="form-group">
+                <label for="email">邮箱：</label>
+                <input type="email" class="form-control" id="email" placeholder="请输入邮箱" value="<%= teachers.email %>">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <button type="submit" id="btnSave" class="btn btn-primary">
+                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                保存
+            </button>
+        </div>
+    </div>
+</form>
+
+<% block('footer').append('<script src="/javascripts/tec-edit.js"></script>') -%>
